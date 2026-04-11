@@ -1,0 +1,17 @@
+{
+  "name": "tidalwatch",
+  "version": "1.0.0",
+  "description": "TidalWatch - Anime streaming frontend powered by AniWatch + MAL",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cheerio": "^1.0.0",
+    "axios": "^1.6.0",
+    "cors": "^2.8.5"
+  }
+}
