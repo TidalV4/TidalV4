@@ -60,9 +60,7 @@ Runs at `http://localhost:4000`
 ## Environment Variables (optional)
 
 ```
-MAL_CLIENT_ID=4ae1c521026203f4c8508b62c3b11b0f
-MAL_CLIENT_SECRET=733cd9cd33f715217cf53f4dca492c54c675a30851cd8105ee1c9c3413e175a1
-PORT=4000
+PRIVATE
 ```
 
 ## Notes on Episode Sources
