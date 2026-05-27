@@ -1,443 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GTR - Spider Lily Bloom</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Poster Auswahl</title>
+  <style>
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    background: #000;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    font-family: 'Cinzel', serif;
-  }
+    body {
+      background: #0d1117;
+      font-family: 'Courier New', monospace;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
 
-  .scene {
-    position: relative;
-    width: 700px;
-    height: 500px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+    .wrap { max-width: 560px; width: 100%; }
 
-  /* Glow behind bloom head */
-  .glow-bg {
-    position: absolute;
-    left: 390px;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(180,0,0,0.5) 0%, transparent 70%);
-    animation: glowPulse 3s ease-in-out infinite;
-    opacity: 0;
-    animation-delay: 1.8s;
-  }
+    .top-label { font-size: 11px; color: #8b949e; letter-spacing: 0.08em; margin-bottom: 6px; animation: fadeUp 0.4s ease both; }
+    .title { font-size: 26px; color: #e6edf3; font-weight: bold; animation: fadeUp 0.5s ease 0.1s both; }
+    .subtitle { font-size: 13px; color: #8b949e; margin-top: 6px; margin-bottom: 32px; animation: fadeUp 0.5s ease 0.2s both; }
 
-  @keyframes glowPulse {
-    0%, 100% { transform: translate(-50%,-50%) scale(1); opacity: 0.5; }
-    50%       { transform: translate(-50%,-50%) scale(2.2); opacity: 1; }
-  }
+    .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
-  .flower-glow {
-    position: absolute;
-    left: 390px;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 280px;
-    height: 280px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(150,0,0,0.12) 0%, transparent 70%);
-    animation: breathe 3s ease-in-out infinite;
-    animation-delay: 4.2s;
-    opacity: 0;
-  }
-  @keyframes breathe {
-    0%, 100% { opacity: 0.5; transform: translate(-50%,-50%) scale(1); }
-    50%       { opacity: 1;   transform: translate(-50%,-50%) scale(1.25); }
-  }
+    .card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 24px 20px;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      transition: border-color 0.2s, transform 0.15s;
+      animation: fadeUp 0.5s ease both;
+    }
+    .card:hover { border-color: #58a6ff; transform: translateY(-4px); }
+    .card:active { transform: scale(0.97); }
+    .card.mine   { animation-delay: 0.3s; }
+    .card.friend { animation-delay: 0.45s; }
 
-  svg.flower {
-    position: absolute;
-    width: 700px;
-    height: 500px;
-    left: 0; top: 0;
-  }
+    .avatar {
+      width: 52px; height: 52px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: bold; margin-bottom: 14px;
+    }
+    .av-me     { background: #0c1d36; color: #58a6ff; border: 1px solid #185fa5; }
+    .av-friend { background: #0d2614; color: #7ee787; border: 1px solid #1d9e75; }
 
-  /* STEM â grows left to right */
-  .stem {
-    stroke: #2d5a1b;
-    stroke-width: 5;
-    fill: none;
-    stroke-linecap: round;
-    stroke-dasharray: 320;
-    stroke-dashoffset: 320;
-    animation: drawStem 1.2s cubic-bezier(0.4,0,0.2,1) forwards;
-    animation-delay: 0.3s;
-    filter: url(#stemGlow);
-  }
-  @keyframes drawStem { to { stroke-dashoffset: 0; } }
+    .card-name { font-size: 16px; color: #e6edf3; font-weight: bold; margin-bottom: 6px; }
+    .card-desc { font-size: 12px; color: #8b949e; line-height: 1.6; margin-bottom: 14px; }
 
-  /* LEAVES growing off the stem */
-  .leaf {
-    fill: #2d5a1b;
-    opacity: 0;
-    filter: url(#stemGlow);
-    animation: unfurlLeaf 0.7s ease forwards;
-  }
-  .leaf-1 { animation-delay: 1.0s; transform-origin: 200px 250px; }
-  .leaf-2 { animation-delay: 1.2s; transform-origin: 280px 250px; }
-  .leaf-3 { animation-delay: 1.35s; transform-origin: 340px 250px; }
+    .card-tag { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 20px; }
+    .tag-me     { background: #0c1d36; color: #58a6ff; border: 1px solid #185fa5; }
+    .tag-friend { background: #0d2614; color: #7ee787; border: 1px solid #1d9e75; }
 
-  @keyframes unfurlLeaf {
-    0%   { opacity: 0; transform: scale(0) rotate(-15deg); }
-    70%  { opacity: 1; transform: scale(1.08) rotate(3deg); }
-    100% { opacity: 1; transform: scale(1) rotate(0deg); }
-  }
-
-  /* ââ PETALS â all rotate around bloom center (440, 250) ââ */
-  /* Petal shape points rightward (positive X direction) */
-  .petal-fill {
-    fill: url(#petalGrad);
-    opacity: 0;
-    animation: bloomPetalFill 0.9s cubic-bezier(0.34,1.56,0.64,1) forwards;
-  }
-  .petal-stroke {
-    fill: none;
-    stroke: #ff5555;
-    stroke-width: 1.5;
-    stroke-linecap: round;
-    opacity: 0;
-    animation: bloomPetalFill 0.9s cubic-bezier(0.34,1.56,0.64,1) forwards;
-  }
-
-  @keyframes bloomPetalFill {
-    0%   { opacity: 0; transform: rotate(var(--ra)) scaleX(0); }
-    60%  { opacity: 1; }
-    100% { opacity: 0.92; transform: rotate(var(--ra)) scaleX(1); }
-  }
-
-  /* 6 petals â rotated around bloom center */
-  /* --ra is baked into inline style */
-  .pf1, .ps1 { animation-delay: 1.7s;  }
-  .pf2, .ps2 { animation-delay: 1.85s; }
-  .pf3, .ps3 { animation-delay: 2.0s;  }
-  .pf4, .ps4 { animation-delay: 2.15s; }
-  .pf5, .ps5 { animation-delay: 2.3s;  }
-  .pf6, .ps6 { animation-delay: 2.45s; }
-
-  /* STAMENS */
-  .stamen {
-    stroke: #ff3333;
-    stroke-width: 1.8;
-    fill: none;
-    stroke-linecap: round;
-    opacity: 0;
-    stroke-dasharray: 110;
-    stroke-dashoffset: 110;
-    animation: drawStamen 0.55s ease forwards;
-  }
-  .st1  { animation-delay: 2.65s; }
-  .st2  { animation-delay: 2.72s; }
-  .st3  { animation-delay: 2.79s; }
-  .st4  { animation-delay: 2.86s; }
-  .st5  { animation-delay: 2.93s; }
-  .st6  { animation-delay: 3.00s; }
-  .st7  { animation-delay: 3.07s; }
-  .st8  { animation-delay: 3.14s; }
-  .st9  { animation-delay: 3.21s; }
-  .st10 { animation-delay: 3.28s; }
-  .st11 { animation-delay: 3.35s; }
-  .st12 { animation-delay: 3.42s; }
-
-  @keyframes drawStamen {
-    0%   { opacity: 0; stroke-dashoffset: 110; }
-    15%  { opacity: 1; }
-    100% { opacity: 1; stroke-dashoffset: 0; }
-  }
-
-  /* ANTHERS */
-  .anther {
-    fill: #ff7700;
-    opacity: 0;
-    animation: popAnther 0.35s ease forwards;
-  }
-  .an1  { animation-delay: 3.2s;  }
-  .an2  { animation-delay: 3.25s; }
-  .an3  { animation-delay: 3.3s;  }
-  .an4  { animation-delay: 3.35s; }
-  .an5  { animation-delay: 3.4s;  }
-  .an6  { animation-delay: 3.45s; }
-  .an7  { animation-delay: 3.5s;  }
-  .an8  { animation-delay: 3.55s; }
-  .an9  { animation-delay: 3.6s;  }
-  .an10 { animation-delay: 3.65s; }
-  .an11 { animation-delay: 3.7s;  }
-  .an12 { animation-delay: 3.75s; }
-
-  @keyframes popAnther {
-    0%   { opacity: 0; transform: scale(0); }
-    70%  { transform: scale(1.4); }
-    100% { opacity: 1; transform: scale(1); }
-  }
-
-  /* Center */
-  .bloom-center {
-    opacity: 0;
-    animation: popAnther 0.4s ease forwards;
-    animation-delay: 2.55s;
-  }
-
-  /* Expanding rings from bloom center */
-  .ring {
-    position: absolute;
-    border-radius: 50%;
-    border: 1px solid rgba(200,0,0,0.35);
-    animation: expandRing 1.8s ease-out forwards;
-    opacity: 0;
-    /* centered on bloom head ~440,250 in 700x500 scene */
-    left: 390px; top: 250px;
-    transform: translate(-50%,-50%);
-  }
-  .ring-1 { width: 140px; height: 140px; animation-delay: 2.5s; }
-  .ring-2 { width: 220px; height: 220px; animation-delay: 2.7s; }
-  .ring-3 { width: 320px; height: 320px; animation-delay: 2.9s; }
-
-  @keyframes expandRing {
-    0%   { opacity: 0.9; transform: translate(-50%,-50%) scale(0.4); }
-    100% { opacity: 0;   transform: translate(-50%,-50%) scale(1.6); }
-  }
-
-  /* GTR text â appears to the LEFT of the flower, centered vertically */
-  .gtr-text {
-    position: absolute;
-    left: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-family: 'Cinzel', serif;
-    font-size: 80px;
-    font-weight: 900;
-    letter-spacing: 0.2em;
-    color: transparent;
-    -webkit-text-stroke: 1.8px #cc0000;
-    text-shadow:
-      0 0 25px rgba(220,0,0,0.9),
-      0 0 50px rgba(200,0,0,0.5),
-      0 0 100px rgba(180,0,0,0.25);
-    opacity: 0;
-    animation: revealGTR 1.4s ease forwards;
-    animation-delay: 3.9s;
-    z-index: 10;
-    writing-mode: horizontal-tb;
-  }
-
-  @keyframes revealGTR {
-    0%   { opacity: 0; letter-spacing: 0.5em; filter: blur(14px); transform: translateY(-50%) translateX(-20px); }
-    60%  { opacity: 1; filter: blur(0); }
-    100% { opacity: 1; letter-spacing: 0.2em; transform: translateY(-50%) translateX(0); }
-  }
-
-  /* Sparkles radiate outward from bloom head */
-  .sparkle {
-    position: absolute;
-    border-radius: 50%;
-    background: #ff3322;
-    opacity: 0;
-    animation: floatSparkle linear infinite;
-  }
-  @keyframes floatSparkle {
-    0%   { opacity: 0; transform: translate(0,0) scale(0); }
-    20%  { opacity: 1; transform: translate(var(--sx), var(--sy)) scale(1); }
-    100% { opacity: 0; transform: translate(calc(var(--sx)*4), calc(var(--sy)*4)) scale(0.2); }
-  }
-</style>
+    .footer { margin-top: 28px; font-size: 11px; color: #6e7681; animation: fadeUp 0.5s ease 0.6s both; }
+    .cursor { display: inline-block; width: 8px; height: 13px; background: #8b949e; vertical-align: middle; margin-left: 2px; animation: blink 1s step-end infinite; }
+  </style>
 </head>
 <body>
+  <div class="wrap">
+    <div class="top-label"># poster-selector</div>
+    <div class="title">Wessen Poster willst du sehen?</div>
+    <div class="subtitle">Klick auf eine Karte — du wirst weitergeleitet.</div>
 
-<div class="scene">
-  <div class="glow-bg"></div>
-  <div class="flower-glow"></div>
+    <div class="cards">
+      <a class="card mine" href="mein-poster.html">
+        <div class="avatar av-me">ME</div>
+        <div class="card-name">Mein Poster →</div>
+        <div class="card-desc">Dein eigenes Wohlfühl-Poster mit deinen Skills und deinem Code-Helden.</div>
+        <span class="card-tag tag-me">mein-poster.html</span>
+      </a>
 
-  <div class="ring ring-1"></div>
-  <div class="ring ring-2"></div>
-  <div class="ring ring-3"></div>
+      <a class="card friend" href="freund-poster.html">
+        <div class="avatar av-friend">FR</div>
+        <div class="card-name">Freund's Poster →</div>
+        <div class="card-desc">Das Poster von deinem Freund — sein Design, seine Stärken.</div>
+        <span class="card-tag tag-friend">freund-poster.html</span>
+      </a>
+    </div>
 
-  <!--
-    Bloom center: (440, 250) within the 700Ã500 SVG
-    Stem runs from left edge (80,250) rightward to (440,250)
-    Petals radiate RIGHTWARD from (440,250)
-    Petal base shape: from (440,250) it extends to the RIGHT (+X)
-  -->
-  <svg class="flower" viewBox="0 0 700 500" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <!-- Petal gradient: dark at base, bright red at tip -->
-      <radialGradient id="petalGrad" cx="10%" cy="50%" r="95%" fx="10%" fy="50%">
-        <stop offset="0%"   stop-color="#770000"/>
-        <stop offset="45%"  stop-color="#cc0000"/>
-        <stop offset="100%" stop-color="#ff4444"/>
-      </radialGradient>
-      <filter id="petalGlow" x="-30%" y="-30%" width="160%" height="160%">
-        <feGaussianBlur stdDeviation="2.5" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-      <filter id="stemGlow" x="-20%" y="-20%" width="140%" height="140%">
-        <feGaussianBlur stdDeviation="1.5" result="blur"/>
-        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
-
-    <!-- STEM: horizontal, slightly wavy, leftâright -->
-    <path class="stem"
-      d="M80 250 Q160 240 220 252 Q300 262 360 248 Q400 240 440 250"
-      filter="url(#stemGlow)"/>
-
-    <!-- LEAVES hanging/rising off the stem -->
-    <g>
-      <!-- leaf drooping down from stem point ~200 -->
-      <path class="leaf leaf-1"
-        d="M200 252 Q190 290 175 310 Q195 285 210 260 Z"
-        style="transform-origin: 200px 252px;"/>
-      <!-- leaf curling up from ~280 -->
-      <path class="leaf leaf-2"
-        d="M280 250 Q270 210 258 192 Q278 215 292 242 Z"
-        style="transform-origin: 280px 250px;"/>
-      <!-- leaf drooping at ~345 -->
-      <path class="leaf leaf-3"
-        d="M345 250 Q335 288 320 305 Q340 282 355 258 Z"
-        style="transform-origin: 345px 250px;"/>
-    </g>
-
-    <!--
-      PETALS: shape goes rightward from (440,250).
-      Each petal: a long curved almond pointing in +X direction.
-      We rotate 6 petals at 0,60,120,180,240,300 deg around (440,250).
-      The petal path: starts at (440,250), curves to tip at (555,250), returns.
-      transform-origin MUST match center (440,250).
-      scaleX(0)âscaleX(1) animates petal growing out rightward.
-    -->
-    <g filter="url(#petalGlow)">
-      <!-- petal fills -->
-      <path class="petal-fill pf1"
-        d="M440,250 Q460,228 510,232 Q548,235 555,250 Q548,265 510,268 Q460,272 440,250 Z"
-        style="--ra:0deg; transform-origin:440px 250px; transform:rotate(0deg);"/>
-      <path class="petal-fill pf2"
-        d="M440,250 Q460,228 510,232 Q548,235 555,250 Q548,265 510,268 Q460,272 440,250 Z"
-        style="--ra:60deg; transform-origin:440px 250px; transform:rotate(60deg);"/>
-      <path class="petal-fill pf3"
-        d="M440,250 Q460,228 510,232 Q548,235 555,250 Q548,265 510,268 Q460,272 440,250 Z"
-        style="--ra:120deg; transform-origin:440px 250px; transform:rotate(120deg);"/>
-      <path class="petal-fill pf4"
-        d="M440,250 Q460,228 510,232 Q548,235 555,250 Q548,265 510,268 Q460,272 440,250 Z"
-        style="--ra:180deg; transform-origin:440px 250px; transform:rotate(180deg);"/>
-      <path class="petal-fill pf5"
-        d="M440,250 Q460,228 510,232 Q548,235 555,250 Q548,265 510,268 Q460,272 440,250 Z"
-        style="--ra:240deg; transform-origin:440px 250px; transform:rotate(240deg);"/>
-      <path class="petal-fill pf6"
-        d="M440,250 Q460,228 510,232 Q548,235 555,250 Q548,265 510,268 Q460,272 440,250 Z"
-        style="--ra:300deg; transform-origin:440px 250px; transform:rotate(300deg);"/>
-
-      <!-- petal strokes (edge highlight) -->
-      <path class="petal-stroke ps1"
-        d="M440,250 Q460,228 510,232 Q548,235 555,250 Q548,265 510,268 Q460,272 440,250"
-        style="--ra:0deg; transform-origin:440px 250px; transform:rotate(0deg);"/>
-      <path class="petal-stroke ps2"
-        d="M440,250 Q460,228 510,232 Q548,235 555,250 Q548,265 510,268 Q460,272 440,250"
-        style="--ra:60deg; transform-origin:440px 250px; transform:rotate(60deg);"/>
-      <path class="petal-stroke ps3"
-        d="M440,250 Q460,228 510,232 Q548,235 555,250 Q548,265 510,268 Q460,272 440,250"
-        style="--ra:120deg; transform-origin:440px 250px; transform:rotate(120deg);"/>
-      <path class="petal-stroke ps4"
-        d="M440,250 Q460,228 510,232 Q548,235 555,250 Q548,265 510,268 Q460,272 440,250"
-        style="--ra:180deg; transform-origin:440px 250px; transform:rotate(180deg);"/>
-      <path class="petal-stroke ps5"
-        d="M440,250 Q460,228 510,232 Q548,235 555,250 Q548,265 510,268 Q460,272 440,250"
-        style="--ra:240deg; transform-origin:440px 250px; transform:rotate(240deg);"/>
-      <path class="petal-stroke ps6"
-        d="M440,250 Q460,228 510,232 Q548,235 555,250 Q548,265 510,268 Q460,272 440,250"
-        style="--ra:300deg; transform-origin:440px 250px; transform:rotate(300deg);"/>
-    </g>
-
-    <!--
-      STAMENS: 12 long curved lines radiating rightward from (440,250)
-      Each stamen curves gently and extends ~100px in the +X direction before rotating.
-    -->
-    <g>
-      <path class="stamen st1"  d="M440,250 Q475,246 548,243" style="transform-origin:440px 250px; transform:rotate(0deg);"/>
-      <path class="stamen st2"  d="M440,250 Q475,246 548,243" style="transform-origin:440px 250px; transform:rotate(30deg);"/>
-      <path class="stamen st3"  d="M440,250 Q475,246 548,243" style="transform-origin:440px 250px; transform:rotate(60deg);"/>
-      <path class="stamen st4"  d="M440,250 Q475,246 548,243" style="transform-origin:440px 250px; transform:rotate(90deg);"/>
-      <path class="stamen st5"  d="M440,250 Q475,246 548,243" style="transform-origin:440px 250px; transform:rotate(120deg);"/>
-      <path class="stamen st6"  d="M440,250 Q475,246 548,243" style="transform-origin:440px 250px; transform:rotate(150deg);"/>
-      <path class="stamen st7"  d="M440,250 Q475,246 548,243" style="transform-origin:440px 250px; transform:rotate(180deg);"/>
-      <path class="stamen st8"  d="M440,250 Q475,246 548,243" style="transform-origin:440px 250px; transform:rotate(210deg);"/>
-      <path class="stamen st9"  d="M440,250 Q475,246 548,243" style="transform-origin:440px 250px; transform:rotate(240deg);"/>
-      <path class="stamen st10" d="M440,250 Q475,246 548,243" style="transform-origin:440px 250px; transform:rotate(270deg);"/>
-      <path class="stamen st11" d="M440,250 Q475,246 548,243" style="transform-origin:440px 250px; transform:rotate(300deg);"/>
-      <path class="stamen st12" d="M440,250 Q475,246 548,243" style="transform-origin:440px 250px; transform:rotate(330deg);"/>
-    </g>
-
-    <!-- ANTHERS at stamen tips (548,243 rotated around 440,250) -->
-    <g>
-      <circle class="anther an1"  cx="548" cy="243" r="4" style="transform-origin:440px 250px; transform:rotate(0deg);"/>
-      <circle class="anther an2"  cx="548" cy="243" r="4" style="transform-origin:440px 250px; transform:rotate(30deg);"/>
-      <circle class="anther an3"  cx="548" cy="243" r="4" style="transform-origin:440px 250px; transform:rotate(60deg);"/>
-      <circle class="anther an4"  cx="548" cy="243" r="4" style="transform-origin:440px 250px; transform:rotate(90deg);"/>
-      <circle class="anther an5"  cx="548" cy="243" r="4" style="transform-origin:440px 250px; transform:rotate(120deg);"/>
-      <circle class="anther an6"  cx="548" cy="243" r="4" style="transform-origin:440px 250px; transform:rotate(150deg);"/>
-      <circle class="anther an7"  cx="548" cy="243" r="4" style="transform-origin:440px 250px; transform:rotate(180deg);"/>
-      <circle class="anther an8"  cx="548" cy="243" r="4" style="transform-origin:440px 250px; transform:rotate(210deg);"/>
-      <circle class="anther an9"  cx="548" cy="243" r="4" style="transform-origin:440px 250px; transform:rotate(240deg);"/>
-      <circle class="anther an10" cx="548" cy="243" r="4" style="transform-origin:440px 250px; transform:rotate(270deg);"/>
-      <circle class="anther an11" cx="548" cy="243" r="4" style="transform-origin:440px 250px; transform:rotate(300deg);"/>
-      <circle class="anther an12" cx="548" cy="243" r="4" style="transform-origin:440px 250px; transform:rotate(330deg);"/>
-    </g>
-
-    <!-- Center of bloom -->
-    <circle class="bloom-center" cx="440" cy="250" r="11" fill="#550000" filter="url(#petalGlow)"/>
-    <circle class="bloom-center" cx="440" cy="250" r="6"  fill="#ff2200" style="animation-delay:2.65s;" filter="url(#petalGlow)"/>
-  </svg>
-
-  <!-- GTR text on the left side -->
-  <div class="gtr-text">GTR</div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const scene = document.querySelector('.scene');
-      // Sparkles radiate outward from bloom head position in scene coords
-      // Bloom head is at roughly (390, 250) in scene (700Ã500 centered in scene div)
-      const cx = 390, cy = 250;
-      for (let i = 0; i < 22; i++) {
-        const s = document.createElement('div');
-        s.className = 'sparkle';
-        const angle = Math.random() * 360;
-        const dist = 30 + Math.random() * 90;
-        const x = cx + dist * Math.cos(angle * Math.PI / 180);
-        const y = cy + dist * Math.sin(angle * Math.PI / 180);
-        const sx = (15 + Math.random() * 20) * Math.cos(angle * Math.PI / 180);
-        const sy = (15 + Math.random() * 20) * Math.sin(angle * Math.PI / 180);
-        s.style.cssText = `
-          left: ${x}px; top: ${y}px;
-          width: ${1.5 + Math.random() * 3}px;
-          height: ${1.5 + Math.random() * 3}px;
-          --sx: ${sx}px; --sy: ${sy}px;
-          animation-delay: ${2.8 + Math.random() * 1.5}s;
-          animation-duration: ${1.8 + Math.random() * 2}s;
-        `;
-        scene.appendChild(s);
-      }
-    });
-  </script>
-</div>
-
+    <div class="footer">
+      <span style="color:#7ee787">$</span> index.html geladen — wähle aus<span class="cursor"></span>
+    </div>
+  </div>
 </body>
 </html>
