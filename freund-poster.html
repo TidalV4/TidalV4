@@ -4,268 +4,436 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Meine Superkraft</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Bebas+Neue&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --orange: #FF6B00;
+  --orange-glow: #FF8C00;
+  --dark: #0A0A0F;
+  --darker: #050508;
+  --blue: #1A56FF;
+  --blue-light: #4D7FFF;
+  --cream: #FFF3E0;
+  --grey: #1E1E2E;
+  --line: #FF6B0022;
+}
 
-  body {
-    background: #1a0a2e;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    font-family: 'Nunito', sans-serif;
-    padding: 20px;
-  }
+* { margin:0; padding:0; box-sizing:border-box; }
 
-  .card {
-    width: 148mm;
-    min-height: 105mm;
-    background: linear-gradient(135deg, #0d0620 0%, #1e0a40 40%, #0a1a3a 100%);
-    border-radius: 12px;
-    position: relative;
-    overflow: hidden;
-    padding: 22px 24px 20px 24px;
-    box-shadow: 0 0 60px #7c3aed55, 0 0 120px #1e40af33;
-    border: 1.5px solid #4c1d95aa;
-  }
+body {
+  background: #050508;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  gap: 16px;
+  font-family: 'Quicksand', sans-serif;
+}
 
-  /* Starry background */
-  .stars {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-  }
-  .star {
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-    animation: twinkle var(--d) ease-in-out infinite alternate;
-  }
-  @keyframes twinkle {
-    from { opacity: 0.1; transform: scale(0.8); }
-    to   { opacity: 0.9; transform: scale(1.2); }
-  }
+.hint {
+  font-size: 11px;
+  color: #ffffff33;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
 
-  /* Glowing orb */
-  .orb {
-    position: absolute;
-    top: -40px; right: -40px;
-    width: 160px; height: 160px;
-    background: radial-gradient(circle, #7c3aed88 0%, #4f46e522 50%, transparent 70%);
-    border-radius: 50%;
-    animation: pulse 3s ease-in-out infinite;
-  }
-  .orb2 {
-    position: absolute;
-    bottom: -30px; left: -30px;
-    width: 120px; height: 120px;
-    background: radial-gradient(circle, #1d4ed888 0%, #3b82f622 50%, transparent 70%);
-    border-radius: 50%;
-    animation: pulse 4s ease-in-out infinite reverse;
-  }
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); opacity: 0.7; }
-    50%       { transform: scale(1.15); opacity: 1; }
-  }
+/* ===== CARD ===== */
+.card {
+  width: 560px;
+  background: var(--dark);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 2px var(--orange),
+    0 0 40px #FF6B0044,
+    0 30px 80px rgba(0,0,0,0.8);
+  animation: cardIn 0.8s cubic-bezier(.22,1,.36,1) both;
+}
+@keyframes cardIn {
+  from { opacity:0; transform: translateY(40px) scale(0.96); }
+  to   { opacity:1; transform: translateY(0) scale(1); }
+}
 
-  /* Header */
-  .header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 14px;
-    position: relative;
-    z-index: 2;
-  }
-  .wizard-icon {
-    font-size: 2.4rem;
-    filter: drop-shadow(0 0 8px #a78bfa);
-    animation: float 3s ease-in-out infinite;
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50%       { transform: translateY(-5px); }
-  }
-  .title-block {}
-  .subtitle {
-    font-family: 'Nunito', sans-serif;
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: #a78bfa;
-    margin-bottom: 2px;
-  }
-  .title {
-    font-family: 'Cinzel Decorative', cursive;
-    font-size: 15px;
-    color: #fff;
-    text-shadow: 0 0 20px #a78bfa, 0 0 40px #7c3aed;
-    line-height: 1.1;
-  }
+/* ===== BASKETBALL COURT LINES (background) ===== */
+.court-lines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.court-lines svg {
+  width: 100%;
+  height: 100%;
+  opacity: 0.07;
+}
 
-  /* Grid */
-  .grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto auto;
-    gap: 7px;
-    position: relative;
-    z-index: 2;
-  }
+/* ===== HEADER ===== */
+.header {
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(135deg, #0d0d1a 0%, #0f0f20 100%);
+  border-bottom: 3px solid var(--orange);
+  padding: 0;
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+}
 
-  .box {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(167,139,250,0.2);
-    border-radius: 8px;
-    padding: 8px 10px;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.3s;
-  }
-  .box::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(124,58,237,0.08), transparent);
-    pointer-events: none;
-  }
-  .box:hover { border-color: rgba(167,139,250,0.5); }
+/* orange side accent */
+.header::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 6px;
+  background: var(--orange);
+  box-shadow: 0 0 20px var(--orange);
+}
 
-  .box.wide {
-    grid-column: 1 / -1;
-  }
+.header-left {
+  padding: 20px 20px 20px 28px;
+  flex: 1;
+}
 
-  .box-icon {
-    font-size: 1.1rem;
-    margin-bottom: 3px;
-    display: block;
-  }
-  .box-label {
-    font-size: 7.5px;
-    font-weight: 800;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: #a78bfa;
-    margin-bottom: 3px;
-  }
-  .box-text {
-    font-size: 10.5px;
-    font-weight: 600;
-    color: #e2e8f0;
-    line-height: 1.35;
-  }
+.team-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--orange);
+  color: #000;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 2px;
+  margin-bottom: 10px;
+}
 
-  /* Magic sparkles decoration */
-  .sparkle {
-    position: absolute;
-    pointer-events: none;
-    z-index: 1;
-    font-size: 10px;
-    opacity: 0.5;
-    animation: sparkle-anim var(--sd) ease-in-out infinite alternate;
-  }
-  @keyframes sparkle-anim {
-    from { opacity: 0.2; transform: scale(0.8) rotate(0deg); }
-    to   { opacity: 0.7; transform: scale(1.3) rotate(20deg); }
-  }
+.main-title {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 52px;
+  color: #fff;
+  line-height: 0.9;
+  letter-spacing: 2px;
+}
+.main-title span {
+  color: var(--orange);
+  text-shadow: 0 0 30px var(--orange);
+}
 
-  /* Divider line */
-  .divider {
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, #7c3aed88, transparent);
-    margin: 10px 0 10px 0;
-    position: relative;
-    z-index: 2;
-  }
+.subtitle-line {
+  margin-top: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #ffffff44;
+}
 
-  @media print {
-    body { background: white; padding: 0; }
-    .card { box-shadow: none; border: 1px solid #ccc; }
-  }
+/* Ball + number block */
+.header-right {
+  width: 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  position: relative;
+  border-left: 1px solid #ffffff0a;
+}
+
+.ball-container {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  animation: spin 8s linear infinite;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.ball-container svg { width: 100%; height: 100%; }
+
+.player-number {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: #ffffff33;
+  text-transform: uppercase;
+  margin-top: 8px;
+}
+
+/* Kuroko silhouette hint */
+.silhouette {
+  position: absolute;
+  right: 0; bottom: 0;
+  width: 100px;
+  height: 130px;
+  opacity: 0.04;
+  background: white;
+  clip-path: polygon(40% 0%, 60% 0%, 75% 15%, 80% 35%, 65% 45%, 70% 60%, 85% 100%, 15% 100%, 30% 60%, 35% 45%, 20% 35%, 25% 15%);
+}
+
+/* Speed lines */
+.speed-line {
+  position: absolute;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--orange), transparent);
+  opacity: 0;
+  animation: speedLine 3s ease-in-out infinite;
+}
+@keyframes speedLine {
+  0%   { opacity: 0; transform: translateX(-100%); }
+  20%  { opacity: 0.6; }
+  100% { opacity: 0; transform: translateX(100%); }
+}
+
+/* ===== STATS GRID ===== */
+.stats-grid {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: #ffffff08;
+}
+
+.stat-block {
+  background: var(--dark);
+  padding: 14px 18px;
+  position: relative;
+  overflow: hidden;
+  animation: blockIn 0.5s cubic-bezier(.22,1,.36,1) both;
+  transition: background 0.2s;
+}
+.stat-block:hover { background: #111120; }
+
+.stat-block:nth-child(1) { animation-delay: .15s; }
+.stat-block:nth-child(2) { animation-delay: .25s; }
+.stat-block:nth-child(3) { animation-delay: .35s; }
+.stat-block:nth-child(4) { animation-delay: .45s; }
+.stat-block:nth-child(5) { animation-delay: .55s; grid-column: 1 / -1; border-top: 1px solid #FF6B0033; }
+
+@keyframes blockIn {
+  from { opacity:0; transform: translateY(12px); }
+  to   { opacity:1; transform: translateY(0); }
+}
+
+/* top accent bar per block */
+.stat-block::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--bar-color, transparent);
+  box-shadow: 0 0 10px var(--bar-color, transparent);
+}
+
+.stat-block.b1 { --bar-color: var(--orange); }
+.stat-block.b2 { --bar-color: var(--blue); }
+.stat-block.b3 { --bar-color: #00E5A0; }
+.stat-block.b4 { --bar-color: #FF4DCC; }
+.stat-block.b5 { --bar-color: var(--orange); }
+
+.stat-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--bar-color, #ffffff44);
+  margin-bottom: 8px;
+}
+.stat-label .ico { font-size: 13px; }
+
+.stat-text {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #e8e8f0;
+  line-height: 1.45;
+}
+.stat-text strong {
+  font-family: 'Bebas Neue', cursive;
+  font-size: 17px;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+/* background decoration per block */
+.block-deco {
+  position: absolute;
+  right: 12px; bottom: 6px;
+  font-size: 36px;
+  opacity: 0.04;
+  transform: rotate(-10deg);
+  filter: grayscale(1);
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  position: relative;
+  z-index: 2;
+  background: var(--darker);
+  border-top: 1px solid #FF6B0033;
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.badge-ball { font-size: 16px; }
+.badge-text {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+.badge-sub {
+  font-size: 8px;
+  color: #ffffff33;
+  letter-spacing: 1px;
+}
+
+.seirin-stripe {
+  display: flex;
+  gap: 3px;
+}
+.seirin-stripe span {
+  display: block;
+  width: 18px; height: 4px;
+  border-radius: 2px;
+}
+
 </style>
 </head>
 <body>
 
+<div class="hint">🏀 Kuroko no Basuke · Superkraft-Ausweis</div>
+
 <div class="card">
-  <!-- Stars -->
-  <div class="stars" id="stars"></div>
 
-  <!-- Glowing orbs -->
-  <div class="orb"></div>
-  <div class="orb2"></div>
+  <!-- Court lines SVG background -->
+  <div class="court-lines">
+    <svg viewBox="0 0 560 400" preserveAspectRatio="none" fill="none" stroke="white" stroke-width="1.5">
+      <!-- center circle -->
+      <circle cx="280" cy="200" r="60"/>
+      <!-- center line -->
+      <line x1="0" y1="200" x2="560" y2="200"/>
+      <!-- left key -->
+      <rect x="0" y="130" width="120" height="140"/>
+      <line x1="120" y1="165" x2="120" y2="235"/>
+      <!-- right key -->
+      <rect x="440" y="130" width="120" height="140"/>
+      <!-- 3pt arc hints -->
+      <path d="M0,100 Q200,10 400,100"/>
+      <path d="M160,400 Q350,310 560,400"/>
+    </svg>
+  </div>
 
-  <!-- Sparkles -->
-  <span class="sparkle" style="top:30%;left:48%;--sd:2.1s">✦</span>
-  <span class="sparkle" style="top:55%;left:10%;--sd:3s">✧</span>
-  <span class="sparkle" style="top:15%;right:30%;--sd:1.7s">✦</span>
+  <!-- Speed lines -->
+  <div class="speed-line" style="top:30px;width:70%;left:0;animation-delay:0s"></div>
+  <div class="speed-line" style="top:50px;width:50%;left:10%;animation-delay:1.2s"></div>
+  <div class="speed-line" style="top:42px;width:40%;left:5%;animation-delay:2.1s"></div>
 
-  <!-- Header -->
+  <!-- HEADER -->
   <div class="header">
-    <div class="wizard-icon">🧙</div>
-    <div class="title-block">
-      <div class="subtitle">Meine</div>
-      <div class="title">Superkraft</div>
+    <div class="header-left">
+      <div class="team-tag">🏀 Seirin High · #00</div>
+      <div class="main-title">MEINE<br><span>SUPER</span>KRAFT</div>
+      <div class="subtitle-line">Generation of Miracles · Persönlicher Ausweis</div>
+    </div>
+
+    <div class="header-right">
+      <!-- Basketball SVG -->
+      <div class="ball-container">
+        <svg viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="48" fill="#FF6B00" stroke="#FF8C00" stroke-width="1"/>
+          <!-- seams -->
+          <path d="M2,50 Q25,30 50,50 Q75,70 98,50" stroke="#000" stroke-width="2.5" fill="none"/>
+          <path d="M2,50 Q25,70 50,50 Q75,30 98,50" stroke="#000" stroke-width="2.5" fill="none"/>
+          <path d="M50,2 Q30,25 50,50 Q70,75 50,98" stroke="#000" stroke-width="2.5" fill="none"/>
+          <!-- shine -->
+          <ellipse cx="34" cy="30" rx="10" ry="6" fill="white" opacity="0.25" transform="rotate(-30 34 30)"/>
+        </svg>
+      </div>
+      <div class="player-number">Phantom Player</div>
+    </div>
+
+    <div class="silhouette"></div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid">
+
+    <div class="stat-block b1">
+      <div class="stat-label"><span class="ico">🎮</span> Meine Stärke</div>
+      <div class="stat-text"><strong>ZOCKEN</strong><br>Reaktion · Strategie · Ausdauer</div>
+      <div class="block-deco">🕹️</div>
+    </div>
+
+    <div class="stat-block b2">
+      <div class="stat-label"><span class="ico">💛</span> Mein Stolz</div>
+      <div class="stat-text"><strong>GEHOLFEN</strong><br>Für andere da sein, wenn es zählt.</div>
+      <div class="block-deco">🤝</div>
+    </div>
+
+    <div class="stat-block b3">
+      <div class="stat-label"><span class="ico">💻</span> Nächstes Level</div>
+      <div class="stat-text"><strong>PROGRAMMIEREN</strong><br>Eigene Spiele bauen. Kein Limit.</div>
+      <div class="block-deco">⌨️</div>
+    </div>
+
+    <div class="stat-block b4">
+      <div class="stat-label"><span class="ico">🎤</span> Mutiger Moment</div>
+      <div class="stat-text"><strong>VOR ALLEN GESPROCHEN</strong><br>Kuroko-Style: leise, aber stark.</div>
+      <div class="block-deco">🦁</div>
+    </div>
+
+    <div class="stat-block b5">
+      <div class="stat-label"><span class="ico">✨</span> Superkraft-Figur</div>
+      <div class="stat-text">
+        <strong>DER MAGIER / DIE MAGIERIN</strong> —
+        Unsichtbar stark. Mit Wissen, Herz und Kreativität zauberst du Lösungen, die andere nicht sehen. Genau wie Kuroko. 🪄
+      </div>
+      <div class="block-deco" style="font-size:50px;right:20px">🧙</div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-badge">
+      <span class="badge-ball">🏀</span>
+      <div>
+        <div class="badge-text">Superkraft bestätigt</div>
+        <div class="badge-sub">Einmalig · Unaufhaltbar · Legendär</div>
+      </div>
+    </div>
+    <div class="seirin-stripe">
+      <span style="background:#FF6B00"></span>
+      <span style="background:#1A56FF"></span>
+      <span style="background:#FF6B00"></span>
+      <span style="background:#1A56FF"></span>
+      <span style="background:#FF6B00"></span>
     </div>
   </div>
 
-  <div class="divider"></div>
-
-  <!-- Content grid -->
-  <div class="grid">
-
-    <div class="box">
-      <span class="box-icon">🎮</span>
-      <div class="box-label">Das kann ich gut</div>
-      <div class="box-text">Zocken – Strategie, Schnelligkeit & Durchhaltevermögen!</div>
-    </div>
-
-    <div class="box">
-      <span class="box-icon">💛</span>
-      <div class="box-label">Darauf bin ich stolz</div>
-      <div class="box-text">Ich habe jemandem geholfen, als er oder sie es gebraucht hat.</div>
-    </div>
-
-    <div class="box">
-      <span class="box-icon">🖥️</span>
-      <div class="box-label">Das will ich noch lernen</div>
-      <div class="box-text">Programmieren – und dann meine eigenen Spiele bauen!</div>
-    </div>
-
-    <div class="box">
-      <span class="box-icon">🎤</span>
-      <div class="box-label">Mein mutiger Moment</div>
-      <div class="box-text">Ich habe vor anderen gesprochen – auch wenn es sich nicht leicht anfühlte.</div>
-    </div>
-
-    <div class="box wide">
-      <span class="box-icon">✨</span>
-      <div class="box-label">Meine Superkraft-Figur</div>
-      <div class="box-text">Der Magier / Die Magierin – mit Wissen, Kreativität und dem Willen zu helfen zaubere ich Lösungen herbei, wo andere nicht weiterkommen. Meine Kraft wächst mit jedem Tag! 🌟</div>
-    </div>
-
-  </div>
 </div>
 
-<script>
-  // Generate stars
-  const starsEl = document.getElementById('stars');
-  for (let i = 0; i < 55; i++) {
-    const s = document.createElement('div');
-    s.className = 'star';
-    const size = Math.random() * 2 + 0.5;
-    s.style.cssText = `
-      width:${size}px; height:${size}px;
-      top:${Math.random()*100}%;
-      left:${Math.random()*100}%;
-      --d:${(Math.random()*2+1).toFixed(1)}s;
-      animation-delay:${(Math.random()*2).toFixed(1)}s;
-    `;
-    starsEl.appendChild(s);
-  }
-</script>
+<div class="hint">← Speichern &amp; ausdrucken für die TutorInnen →</div>
 
 </body>
 </html>
