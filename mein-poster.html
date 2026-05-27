@@ -2,39 +2,67 @@
 <style>
   @keyframes fillBar { from { width: 0 } to { width: var(--target) } }
   @keyframes fadeUp { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:translateY(0) } }
-  @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.5 } }
-  @keyframes scanline { 0% { top: 0 } 100% { top: 100% } }
+  @keyframes pulse { 0%,100% { opacity:1 } 50% { opacity:0.4 } }
   @keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
   @keyframes typeIn { from{width:0}to{width:100%} }
+  @keyframes scanline {
+    0% { top: -8px; opacity: 0.15; }
+    100% { top: 100%; opacity: 0.05; }
+  }
+  @keyframes flicker {
+    0%,100%{opacity:1} 94%{opacity:1} 95%{opacity:0.75} 96%{opacity:1} 98%{opacity:0.9} 99%{opacity:1}
+  }
 
-  .terminal-wrap {
-    background: #0d1117;
-    border-radius: 12px;
-    padding: 0;
+  .eva-wrap {
+    background: #110608;
+    border-radius: 10px;
     overflow: hidden;
     font-family: 'Courier New', monospace;
-    border: 1px solid #30363d;
+    border: 1px solid #7a1a1a;
+    position: relative;
+    animation: flicker 7s ease-in-out infinite;
+  }
+  .eva-wrap::before {
+    content:'';
+    position:absolute;
+    left:0;right:0;
+    height:8px;
+    background: linear-gradient(to bottom, rgba(220,60,40,0.08), transparent);
+    animation: scanline 3.5s linear infinite;
+    pointer-events:none;
+    z-index:10;
   }
   .t-bar {
-    background: #161b22;
+    background: #1c0a0a;
     padding: 10px 16px;
     display: flex;
     align-items: center;
     gap: 8px;
-    border-bottom: 1px solid #21262d;
+    border-bottom: 1px solid #7a1a1a;
   }
   .dot { width:12px;height:12px;border-radius:50% }
-  .t-title { color:#8b949e; font-size:12px; margin-left:auto; margin-right:auto; }
+  .t-title { color: #e87060; font-size:12px; margin-left:auto; margin-right:auto; letter-spacing: 0.08em; }
   .section {
     padding: 20px 24px;
-    border-bottom: 1px solid #21262d;
+    border-bottom: 1px solid #2e0e0e;
     animation: fadeUp 0.5s ease both;
+    position: relative;
+  }
+  .section::after {
+    content:'';
+    position:absolute;
+    left:0;top:0;bottom:0;
+    width:2px;
+    background: #dc3c28;
+    opacity:0.5;
   }
   .section-label {
     font-size: 11px;
-    color: #8b949e;
+    color: #dc3c28;
     margin-bottom: 14px;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.9;
   }
   .skill-row {
     display: flex;
@@ -44,33 +72,36 @@
   }
   .skill-name {
     font-size: 12px;
-    color: #e6edf3;
+    color: #f0d0c0;
     width: 130px;
     flex-shrink: 0;
+    letter-spacing: 0.04em;
   }
   .bar-track {
     flex: 1;
     height: 14px;
-    background: #21262d;
-    border-radius: 7px;
+    background: #1c0a0a;
+    border-radius: 3px;
     overflow: hidden;
     position: relative;
+    border: 1px solid #3a1010;
   }
   .bar-fill {
     height: 100%;
-    border-radius: 7px;
+    border-radius: 2px;
     width: 0;
     animation: fillBar 1.4s cubic-bezier(0.22,1,0.36,1) both;
+    position: relative;
   }
   .bar-fill::after {
     content:'';
     position:absolute;
     top:0;left:0;right:0;bottom:0;
-    background: repeating-linear-gradient(90deg,transparent,transparent 6px,rgba(255,255,255,0.06) 6px,rgba(255,255,255,0.06) 8px);
+    background: repeating-linear-gradient(90deg,transparent,transparent 6px,rgba(255,255,255,0.05) 6px,rgba(255,255,255,0.05) 8px);
   }
   .pct {
     font-size: 11px;
-    color: #8b949e;
+    color: #e87060;
     width: 36px;
     text-align: right;
     flex-shrink: 0;
@@ -79,57 +110,70 @@
   .tag {
     font-size: 11px;
     padding: 4px 10px;
-    border-radius: 20px;
+    border-radius: 3px;
     font-family: 'Courier New', monospace;
     animation: fadeUp 0.6s ease both;
+    letter-spacing: 0.05em;
   }
-  .tag-green { background:#0d2614;color:#7ee787;border:1px solid #1a4a25; }
-  .tag-blue  { background:#0c1d36;color:#79c0ff;border:1px solid #143066; }
-  .tag-amber { background:#2b1d0e;color:#ffa657;border:1px solid #4d3010; }
+  .tag-red    { background:#200808;color:#e87060;border:1px solid #5a1818; }
+  .tag-orange { background:#1e0e04;color:#e8a060;border:1px solid #5a2c10; }
+  .tag-light  { background:#1c0f0f;color:#f0d0c0;border:1px solid #3a2020; }
   .mutmacher {
-    background:#0c1d36;
-    border-left: 3px solid #58a6ff;
-    border-radius: 0 8px 8px 0;
+    background:#1c0a0a;
+    border-left: 3px solid #dc3c28;
+    border-radius: 0 4px 4px 0;
     padding: 12px 16px;
     margin-top: 4px;
   }
   .mutmacher-text {
     font-size: 15px;
-    color: #58a6ff;
+    color: #e87060;
     font-weight: bold;
     overflow: hidden;
     white-space: nowrap;
     animation: typeIn 2s steps(32,end) 0.5s both;
+    letter-spacing: 0.04em;
   }
   .cursor {
     display:inline-block;
     width:9px;height:15px;
-    background:#58a6ff;
+    background:#dc3c28;
     vertical-align:middle;
     margin-left:2px;
     animation: blink 1s step-end infinite;
   }
   .prompt-line {
     font-size: 12px;
-    color: #8b949e;
+    color: #6a2020;
     margin-top: 10px;
+    letter-spacing: 0.03em;
   }
-  .prompt-green { color:#7ee787; }
   .stat-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:4px; }
   .stat-card {
-    background:#161b22;
-    border:1px solid #21262d;
-    border-radius:8px;
+    background:#1c0a0a;
+    border:1px solid #3a1010;
+    border-radius:6px;
     padding:12px;
     animation: fadeUp 0.5s ease both;
+    position:relative;
+    overflow:hidden;
   }
-  .stat-val { font-size:22px;font-weight:bold;color:#e6edf3;display:block; }
-  .stat-lbl { font-size:11px;color:#8b949e;margin-top:4px;display:block; }
+  .stat-card::before {
+    content:'';
+    position:absolute;
+    top:0;left:0;right:0;
+    height:2px;
+    background:#dc3c28;
+    opacity:0.6;
+  }
+  .stat-val { font-size:22px;font-weight:bold;color:#f0d0c0;display:block; }
+  .stat-lbl { font-size:11px;color:#7a3030;margin-top:4px;display:block;letter-spacing:0.05em; }
   .hero-section {
     padding: 20px 24px 24px;
     text-align: center;
+    position:relative;
   }
-  .hero-label { font-size:11px;color:#8b949e;margin-bottom:16px; }
+  .hero-label { font-size:11px;color:#dc3c28;margin-bottom:16px;letter-spacing:0.1em;opacity:0.9; }
   .figure-wrap {
     display:inline-block;
     position:relative;
@@ -137,173 +181,200 @@
   }
   .head {
     width:60px;height:52px;
-    background:#ffa657;
-    border-radius:12px;
+    background:#cc2a1a;
+    border-radius:6px;
     margin:0 auto;
     position:relative;
     display:flex;align-items:center;justify-content:center;
     gap:8px;
+    border: 2px solid #e87060;
+    overflow:hidden;
   }
   .eye {
-    width:12px;height:10px;
-    background:#0d1117;
-    border-radius:3px;
+    width:11px;height:9px;
+    background:#110608;
+    border-radius:2px;
     position:relative;
   }
   .eye::after {
     content:'';
     position:absolute;
     width:5px;height:5px;
-    background:#58a6ff;
-    border-radius:2px;
-    top:1px;left:2px;
-    animation: blink 2s step-end infinite;
+    background:#e8c040;
+    border-radius:1px;
+    top:2px;left:3px;
+    animation: blink 2.5s step-end infinite;
+  }
+  .hair {
+    position:absolute;
+    top:-8px;left:-2px;right:-2px;
+    height:14px;
+    background:#e84820;
+    border-radius:4px 4px 0 0;
   }
   .body-block {
     width:74px;
-    background:#161b22;
-    border:2px solid #58a6ff;
-    border-radius:8px;
+    background:#1c0a0a;
+    border:2px solid #7a1a1a;
+    border-radius:4px;
     margin:2px auto 0;
     padding:8px 6px;
     font-size:9px;
-    color:#7ee787;
+    color:#e87060;
     line-height:1.7;
   }
   .legs { display:flex;justify-content:center;gap:8px;margin-top:3px; }
   .leg {
     width:22px;height:36px;
-    background:#161b22;
-    border:1px solid #30363d;
-    border-radius:4px;
+    background:#cc2a1a;
+    border:1px solid #e87060;
+    border-radius:3px;
   }
   .bolt {
-    font-size:22px;
-    color:#febc2e;
+    font-size:20px;
+    color:#e8a060;
     position:absolute;
     top:42px;
-    animation: pulse 1.5s ease-in-out infinite;
+    animation: pulse 1.6s ease-in-out infinite;
   }
   .bolt-l { left:-22px; }
   .bolt-r { right:-22px; }
   .superkraft-badge {
     display:inline-block;
-    background:#1f2937;
-    border:1px solid #58a6ff;
-    border-radius:20px;
+    background:#1c0a0a;
+    border:1px solid #7a1a1a;
+    border-radius:4px;
     padding:6px 18px;
     font-size:12px;
-    color:#58a6ff;
+    color:#e87060;
     margin-top:14px;
     animation: fadeUp 1s ease 1.2s both;
+    letter-spacing: 0.07em;
   }
+  .nerv-stripe {
+    background: #dc3c28;
+    height: 3px;
+    margin: 0;
+    opacity: 0.55;
+  }
+  .corner-mark {
+    position:absolute;
+    font-size:9px;
+    color:#5a1818;
+    letter-spacing:0.08em;
+  }
+  .corner-mark.tl { top:6px; left:6px; }
+  .corner-mark.tr { top:6px; right:6px; }
 </style>
 
-<div class="terminal-wrap">
+<div class="eva-wrap">
+  <div class="nerv-stripe"></div>
   <div class="t-bar">
-    <div class="dot" style="background:#ff5f57"></div>
-    <div class="dot" style="background:#febc2e"></div>
-    <div class="dot" style="background:#28c840"></div>
-    <span class="t-title">wohlfuehl_poster.html — running</span>
+    <div class="dot" style="background:#dc3c28;opacity:0.95"></div>
+    <div class="dot" style="background:#e8a060;opacity:0.8"></div>
+    <div class="dot" style="background:#e8c040;opacity:0.85"></div>
+    <span class="t-title">NERV // EVA-02 // wohlfuehl_poster.exe</span>
   </div>
 
   <div class="section" style="animation-delay:0.1s">
-    <div class="section-label"># mein wohlfuehl-ich — skill tree</div>
+    <span class="corner-mark tl">NRV-02</span>
+    <span class="corner-mark tr">PILOT:ASUKA</span>
+    <div class="section-label"># skill_tree — synchronization_rate</div>
 
     <div class="skill-row">
-      <span class="skill-name prompt-green">programmieren</span>
+      <span class="skill-name" style="color:#dc3c28">programmieren</span>
       <div class="bar-track">
-        <div class="bar-fill" style="--target:90%;background:#1d9e75;animation-delay:0.2s"></div>
+        <div class="bar-fill" style="--target:90%;background:#4a0e0e;border-right:2px solid #dc3c28;animation-delay:0.2s"></div>
       </div>
       <span class="pct">90%</span>
     </div>
     <div class="skill-row">
-      <span class="skill-name" style="color:#79c0ff">C++ / C# / Java</span>
+      <span class="skill-name" style="color:#e8a060">C++ / C# / Java</span>
       <div class="bar-track">
-        <div class="bar-fill" style="--target:85%;background:#185fa5;animation-delay:0.35s"></div>
+        <div class="bar-fill" style="--target:85%;background:#3a1e08;border-right:2px solid #e8a060;animation-delay:0.35s"></div>
       </div>
       <span class="pct">85%</span>
     </div>
     <div class="skill-row">
-      <span class="skill-name" style="color:#ffa657">schnell lernen</span>
+      <span class="skill-name" style="color:#e87060">schnell lernen</span>
       <div class="bar-track">
-        <div class="bar-fill" style="--target:95%;background:#ba7517;animation-delay:0.5s"></div>
+        <div class="bar-fill" style="--target:95%;background:#4a0e0e;border-right:2px solid #e87060;animation-delay:0.5s"></div>
       </div>
       <span class="pct">95%</span>
     </div>
     <div class="skill-row">
-      <span class="skill-name" style="color:#f85149">bugs finden</span>
+      <span class="skill-name" style="color:#e8c040">bugs finden</span>
       <div class="bar-track">
-        <div class="bar-fill" style="--target:78%;background:#a32d2d;animation-delay:0.65s"></div>
+        <div class="bar-fill" style="--target:78%;background:#3a2c08;border-right:2px solid #e8c040;animation-delay:0.65s"></div>
       </div>
       <span class="pct">78%</span>
     </div>
     <div class="skill-row">
-      <span class="skill-name" style="color:#d4537e">mit freunden</span>
+      <span class="skill-name" style="color:#f0d0c0">mit freunden</span>
       <div class="bar-track">
-        <div class="bar-fill" style="--target:100%;background:#993556;animation-delay:0.8s"></div>
+        <div class="bar-fill" style="--target:100%;background:#3a1818;border-right:2px solid #f0d0c0;animation-delay:0.8s"></div>
       </div>
       <span class="pct">100%</span>
     </div>
 
     <div class="tag-row" style="margin-top:16px">
-      <span class="tag tag-green" style="animation-delay:0.2s">✓ programmieren</span>
-      <span class="tag tag-green" style="animation-delay:0.3s">✓ technik</span>
-      <span class="tag tag-blue"  style="animation-delay:0.4s">~ mit freunden</span>
-      <span class="tag tag-blue"  style="animation-delay:0.5s">~ allein zu hause</span>
-      <span class="tag tag-amber" style="animation-delay:0.6s">↗ open source</span>
-      <span class="tag tag-amber" style="animation-delay:0.7s">↗ eigene app</span>
+      <span class="tag tag-red"    style="animation-delay:0.2s">✓ programmieren</span>
+      <span class="tag tag-red"    style="animation-delay:0.3s">✓ technik</span>
+      <span class="tag tag-orange" style="animation-delay:0.4s">~ mit freunden</span>
+      <span class="tag tag-orange" style="animation-delay:0.5s">~ allein zu hause</span>
+      <span class="tag tag-light"  style="animation-delay:0.6s">↗ open source</span>
+      <span class="tag tag-light"  style="animation-delay:0.7s">↗ eigene app</span>
     </div>
   </div>
 
   <div class="section" style="animation-delay:0.3s">
-    <div class="section-label"># mutmacher-satz</div>
+    <div class="section-label"># mutmacher.log — uplink_active</div>
     <div class="mutmacher">
       <div class="mutmacher-text">„Fehler sind Teil des Codes."<span class="cursor"></span></div>
     </div>
     <div class="prompt-line">
-      <span style="color:#7ee787">&gt;&gt;&gt;</span>
-      <span style="color:#e6edf3"> print(motivate(me))</span>
+      <span style="color:#dc3c28">&gt;&gt;&gt;</span>
+      <span style="color:#f0d0c0"> print(motivate(me))</span>
     </div>
   </div>
 
   <div class="section" style="animation-delay:0.5s">
-    <div class="section-label"># meine superkraft — stats</div>
+    <div class="section-label"># at_field — stats_readout</div>
     <div class="stat-grid">
       <div class="stat-card" style="animation-delay:0.5s">
-        <span class="stat-val" style="color:#7ee787">2</span>
-        <span class="stat-lbl">Jahre coding</span>
+        <span class="stat-val" style="color:#dc3c28">2</span>
+        <span class="stat-lbl">jahre coding</span>
       </div>
       <div class="stat-card" style="animation-delay:0.65s">
-        <span class="stat-val" style="color:#79c0ff">12</span>
-        <span class="stat-lbl">Jahre alt</span>
+        <span class="stat-val" style="color:#e8a060">12</span>
+        <span class="stat-lbl">jahre alt</span>
       </div>
       <div class="stat-card" style="animation-delay:0.8s">
-        <span class="stat-val" style="color:#ffa657">∞</span>
+        <span class="stat-val" style="color:#e8c040">∞</span>
         <span class="stat-lbl">bugs debugged</span>
       </div>
     </div>
 
     <div style="margin-top:14px">
-      <div class="section-label">darauf bin ich stolz</div>
+      <div class="section-label">darauf bin ich stolz — pride_metrics</div>
       <div class="skill-row">
-        <span class="skill-name" style="color:#7ee787">coding-erfahrung</span>
+        <span class="skill-name" style="color:#dc3c28">coding-erfahrung</span>
         <div class="bar-track">
-          <div class="bar-fill" style="--target:80%;background:#1d9e75;animation-delay:0.9s"></div>
+          <div class="bar-fill" style="--target:80%;background:#4a0e0e;border-right:2px solid #dc3c28;animation-delay:0.9s"></div>
         </div>
         <span class="pct">pro</span>
       </div>
       <div class="skill-row">
-        <span class="skill-name" style="color:#ffa657">mutig sein</span>
+        <span class="skill-name" style="color:#e8a060">mutig sein</span>
         <div class="bar-track">
-          <div class="bar-fill" style="--target:100%;background:#ba7517;animation-delay:1.05s"></div>
+          <div class="bar-fill" style="--target:100%;background:#3a1e08;border-right:2px solid #e8a060;animation-delay:1.05s"></div>
         </div>
         <span class="pct">max</span>
       </div>
       <div class="skill-row">
-        <span class="skill-name" style="color:#79c0ff">noch lernen wollen</span>
+        <span class="skill-name" style="color:#f0d0c0">noch lernen wollen</span>
         <div class="bar-track">
-          <div class="bar-fill" style="--target:999%;background:#185fa5;animation-delay:1.2s"></div>
+          <div class="bar-fill" style="--target:99%;background:#3a1818;border-right:2px solid #f0d0c0;animation-delay:1.2s"></div>
         </div>
         <span class="pct">99%</span>
       </div>
@@ -311,10 +382,11 @@
   </div>
 
   <div class="hero-section">
-    <div class="hero-label"># superkraft-figur: der code-held</div>
+    <div class="hero-label"># superkraft_figur — unit_02_production</div>
     <div class="figure-wrap">
       <span class="bolt bolt-l">&#9889;</span>
       <div class="head">
+        <div class="hair"></div>
         <div class="eye"></div>
         <div class="eye"></div>
       </div>
@@ -334,11 +406,12 @@
     <span class="superkraft-badge">superkraft: schnell lernen &amp; nie aufgeben</span>
 
     <div class="prompt-line" style="margin-top:18px;text-align:left">
-      <span style="color:#7ee787">$</span>
-      <span style="color:#e6edf3"> git commit -m "Ich bin auf dem richtigen Weg"</span>
+      <span style="color:#dc3c28">$</span>
+      <span style="color:#f0d0c0"> git commit -m "Ich bin auf dem richtigen Weg"</span>
     </div>
-    <div class="prompt-line" style="color:#7ee787;text-align:left">
+    <div class="prompt-line" style="color:#dc3c28;text-align:left">
       [main] 1 file changed, 1 insertion(+)
     </div>
   </div>
+  <div class="nerv-stripe"></div>
 </div>
